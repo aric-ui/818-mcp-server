@@ -32,7 +32,8 @@ app.get('/.well-known/mcp.json', (req, res) => {
             { name: 'get_lead', description: 'Get lead', parameters: { type: 'object', required: ['lead_id'], properties: { lead_id: { type: 'string' } } } },
             { name: 'get_projects', description: 'Get projects', parameters: { type: 'object', properties: { status: { type: 'string' } } } },
             { name: 'create_project', description: 'Create project', parameters: { type: 'object', required: ['lead_id'], properties: { lead_id: { type: 'string' }, customer_name: { type: 'string' } } } },
-            { name: 'get_todays_appointments', description: 'Get appointments', parameters: { type: 'object', properties: {} } }
+            { name: 'get_todays_appointments', description: 'Get appointments', parameters: { type: 'object', properties: {} } },
+      { name: 'get_team_members', description: 'Get team members with contact info and roles', parameters: { type: 'object', properties: {} } }
                 ]
     });
 });
@@ -89,6 +90,20 @@ app.post('/tools/get_todays_appointments', authMiddleware, async (req, res) => {
           if (error) throw error;
           res.json({ success: true, appointments: data });
     } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.post('/tools/get_team_members', authMiddleware, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('team_members')
+      .select('*')
+      .order('name');
+
+    if (error) throw error;
+    res.json({ success: true, team_members: data });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 app.get('/health', (req, res) => {
