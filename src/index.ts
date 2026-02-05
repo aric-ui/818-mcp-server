@@ -32,7 +32,8 @@ app.get('/.well-known/mcp.json', (req, res) => {
             { name: 'get_lead', description: 'Get lead', parameters: { type: 'object', required: ['lead_id'], properties: { lead_id: { type: 'string' } } } },
             { name: 'get_projects', description: 'Get projects', parameters: { type: 'object', properties: { status: { type: 'string' } } } },
             { name: 'create_project', description: 'Create project', parameters: { type: 'object', required: ['lead_id'], properties: { lead_id: { type: 'string' }, customer_name: { type: 'string' } } } },
-            { name: 'get_todays_appointments', description: 'Get appointments', parameters: { type: 'object', properties: {} } }
+            { name: 'get_todays_appointments', description: 'Get appointments', parameters: { type: 'object', properties: {} } },
+            { name: 'get_team_members', description: 'Get team members and their roles', parameters: { type: 'object', properties: { role: { type: 'string' } } } }
                 ]
     });
 });
@@ -88,6 +89,16 @@ app.post('/tools/get_todays_appointments', authMiddleware, async (req, res) => {
           const { data, error } = await supabase.from('projects').select('*');
           if (error) throw error;
           res.json({ success: true, appointments: data });
+    } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+app.post('/tools/get_team_members', authMiddleware, async (req, res) => {
+    try {
+          let query = supabase.from('team_members').select('*').order('name', { ascending: true });
+          if (req.body.role) query = query.eq('role', req.body.role);
+          const { data, error } = await query;
+          if (error) throw error;
+          res.json({ success: true, team_members: data });
     } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
