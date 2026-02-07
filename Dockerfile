@@ -15,6 +15,10 @@ RUN npm install
 # Copy application files
 COPY . .
 
+# Copy and make start script executable
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Install OpenClaw
 RUN curl -fsSL https://openclaw.ai/install.sh | bash -s -- --no-onboard
 
@@ -25,4 +29,4 @@ ENV PATH="/root/.local/bin:$PATH"
 EXPOSE 8080
 
 # Start command
-CMD ["sh", "-c", "openclaw gateway --allow-unconfigured --bind lan --port ${PORT:-8080}"]
+CMD ["/bin/bash", "/app/start.sh"]
