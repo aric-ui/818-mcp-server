@@ -18,8 +18,8 @@ for i in {1..30}; do
 done
 
 # Approve Telegram pairing
-echo "Approving Telegram pairing with code RK53JMLZ..."
-openclaw pairing approve telegram RK53JMLZ || echo "Pairing approval failed or already approved"
+echo "Approving Telegram pairing with code MX96E7K3..."
+openclaw pairing approve telegram MX96E7K3 || echo "Pairing approval failed or already approved"
 
 # Keep container running by waiting for gateway process
 echo "OpenClaw gateway running. Waiting for process..."
