@@ -25,4 +25,4 @@ ENV PATH="/root/.local/bin:$PATH"
 EXPOSE 8080
 
 # Start command
-CMD ["sh", "-c", "openclaw gateway --allow-unconfigured --bind 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["sh", "-c", "openclaw gateway --allow-unconfigured --bind lan --port ${PORT:-8080}"]
