@@ -18,8 +18,20 @@ for i in {1..30}; do
 done
 
 # Approve Telegram pairing
-echo "Approving Telegram pairing with code MX96E7K3..."
-openclaw pairing approve telegram MX96E7K3 || echo "Pairing approval failed or already approved"
+# Continuous pairing approval loop in background
+(
+  while true; do
+    if [ -n "$PAIRING_CODE" ]; then
+      echo "Attempting to approve pairing code: $PAIRING_CODE"
+      openclaw pairing approve telegram "$PAIRING_CODE" 2>&1 | tee -a /tmp/pairing.log
+      if grep -q "Successfully approved" /tmp/pairing.log 2>/dev/null; then
+        echo "Pairing successful! Clearing PAIRING_CODE"
+        unset PAIRING_CODE
+      fi
+    fi
+    sleep 5
+  done
+) &
 
 # Keep container running by waiting for gateway process
 echo "OpenClaw gateway running. Waiting for process..."
